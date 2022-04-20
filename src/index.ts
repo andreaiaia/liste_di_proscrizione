@@ -8,10 +8,10 @@ server.get('/ping', async (req, reply) => {
     return { test: 'pong\n' };
 })
 
-server.listen({ port: PORT }, (err, address) => {
+server.listen({ port: PORT, host: '127.0.0.1' }, (err, address) => {
     if (err) {
         console.error(err);
-        process.exit(1)
+        process.exit(1);
     }
     console.log(`Server listening at ${address}`);
 })
