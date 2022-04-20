@@ -1,7 +1,11 @@
 import Fastify from "fastify";
+import fastifyPostgres from "fastify-postgres";
 
 const server = Fastify({ logger: true });
 const PORT = 4896;
+
+server.register(fastifyPostgres, { connectionString: 'postgres://postgres@localhost/postgres' });
+
 
 server.get('/ping', async (req, reply) => {
     reply.type('application/json').code(200);
