@@ -11,7 +11,7 @@
     "start": "fastify start -l info app.js",
     "dev": "fastify start -w -l info -P app.js",
     "build": "tsc -p tsconfig.json",
-    "tstart": "node index.js"
+    "tstart": "node dist/index.js"
   },
   "repository": {
     "type": "git",
