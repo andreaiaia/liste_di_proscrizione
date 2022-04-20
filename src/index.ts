@@ -1,13 +1,14 @@
-import fastify from "fastify";
+import Fastify from "fastify";
 
-const server = fastify();
+const server = Fastify({ logger: true });
 const PORT = 4896;
 
-server.get('/ping', async (request, reply) => {
-    reply.send({ test: 'pong\n' });
+server.get('/ping', async (req, reply) => {
+    reply.type('application/json').code(200);
+    return { test: 'pong\n' };
 })
 
-server.listen(PORT, (err, address) => {
+server.listen({ port: PORT }, (err, address) => {
     if (err) {
         console.error(err);
         process.exit(1)

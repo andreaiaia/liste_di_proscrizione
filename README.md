@@ -1,4 +1,5 @@
 # Getting Started with Fastify-CLI [Fastify-CLI](https://www.npmjs.com/package/fastify-cli)
+
 This project was bootstrapped with Fastify-CLI.
 
 ## Available Scripts
@@ -21,3 +22,7 @@ Run the test cases.
 ## Learn More
 
 To learn Fastify, check out the [Fastify documentation](https://www.fastify.io/docs/latest/).
+
+# Notes to organize
+
+https://github.com/fastify/fastify/blob/main/docs/Guides/Plugins-Guide.md
