@@ -55,3 +55,6 @@ profile-*
 profile*
 *clinic*
 *flamegraph*
+
+# Build directory
+dist
