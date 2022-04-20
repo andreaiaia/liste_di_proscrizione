@@ -5,10 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const fastify_1 = __importDefault(require("fastify"));
 const server = (0, fastify_1.default)();
+const PORT = 4896;
 server.get('/ping', async (request, reply) => {
-    return 'pong\n';
+    reply.send({ test: 'pong\n' });
 });
-server.listen(8080, (err, address) => {
+server.listen(PORT, (err, address) => {
     if (err) {
         console.error(err);
         process.exit(1);
