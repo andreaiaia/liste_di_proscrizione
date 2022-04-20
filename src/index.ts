@@ -1,21 +1,23 @@
-import Fastify from "fastify";
-import fastifyPostgres from "fastify-postgres";
+import Fastify from 'fastify';
+import firstRoute from './firstRoute';
 
-const server = Fastify({ logger: true });
-const PORT = 4896;
+const PORT = 5000;
 
-server.register(fastifyPostgres, { connectionString: 'postgres://postgres@localhost/postgres' });
+const fastify = Fastify({ logger: true });
 
+fastify.register(firstRoute);
 
-server.get('/ping', async (req, reply) => {
-    reply.type('application/json').code(200);
-    return { test: 'pong\n' };
+fastify.get('/', async (req, reply) => {
+    return { hello: 'world' };
 })
 
-server.listen({ port: PORT, host: '127.0.0.1' }, (err, address) => {
-    if (err) {
-        console.error(err);
+const start = async () => {
+    try {
+        await fastify.listen({ port: PORT, host: '127.0.0.1' })
+    } catch (err) {
+        fastify.log.error(err);
         process.exit(1);
     }
-    console.log(`Server listening at ${address}`);
-})
+}
+
+start();
