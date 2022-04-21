@@ -1,11 +1,11 @@
 import Fastify from 'fastify';
-import firstRoute from './firstRoute';
+import routes from './firstRoute';
 
 const PORT = 5000;
 
 const fastify = Fastify({ logger: true });
 
-fastify.register(firstRoute);
+fastify.register(routes);
 
 fastify.get('/', async (req, reply) => {
     return { hello: 'world' };
