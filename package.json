@@ -23,6 +23,8 @@
     "typescript": "^4.6.3"
   },
   "dependencies": {
-    "fastify-decorators": "^3.11.0"
+    "fastify-decorators": "^3.11.0",
+    "fastify-mongodb": "^4.1.1",
+    "fastify-plugin": "^3.0.1"
   }
 }
