@@ -1,7 +1,9 @@
-async function routes(fastify, options) {
+import { FastifyPluginCallback } from 'fastify';
+
+const routes: FastifyPluginCallback = async (fastify, options, done) => {
     fastify.get('/', async (req, reply) => {
         return { hello: 'world' };
     })
 }
 
-module.exports = routes;
+export default routes;
