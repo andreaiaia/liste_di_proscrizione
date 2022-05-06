@@ -28,7 +28,7 @@ const routes: FastifyPluginCallback = async (fastify, options) => {
         body: animalBodyJsonSchema
     };
 
-    fastify.post<{ Body: FromSchema<typeof animalBodyJsonSchema> }>(
+    fastify.post < { Body: FromSchema < typeof animalBodyJsonSchema > } > (
         '/animals', { schema },
         async (req, reply) => {
             // We can use the 'request.body' object to get the data sent by the client

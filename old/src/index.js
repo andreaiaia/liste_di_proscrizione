@@ -33,10 +33,10 @@ server.get('/ping', async (req, reply) => {
     return { repl: 'pong' };
 });
 
-server.get<{
+server.get < {
     Querystring: IQueryString,
     Headers: IHeaders
-}>('/auth', {
+} > ('/auth', {
     preValidation: (req, reply, done) => {
         const { username, password } = req.query;
         done(username !== 'admin' ? new Error('Must be admin') : undefined);
@@ -56,10 +56,10 @@ server.get('/blacklisted', async (req, reply) => {
     )
 });
 
-server.post<{
+server.post < {
     Querystring: addEntry,
     Headers: IHeaders
-}>('/add/:email', async (req, reply) => {
+} > ('/add/:email', async (req, reply) => {
     return server.pg.transact(async client => {
         const { body } = req;
         const id = await client.query('INSERT INTO users(username) VALUES($1) RETURNING id', [body]);

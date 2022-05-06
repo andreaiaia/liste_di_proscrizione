@@ -1,8 +1,6 @@
-async function routes(fastify, options) {
+export const routes = async (fastify, options) => {
     // Testing route
-    fastify.get('/', async (request, reply) => {
+    fastify.get('/test', async (request, reply) => {
         return { hello: 'world' };
     });
-}
-
-module.exports = routes;
+};
