@@ -1,2 +1,0 @@
-### GET ALL BLACKLISTED
-GET http://localhost:4896/ping HTTP/1.1
