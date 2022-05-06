@@ -15,13 +15,17 @@ fastify.register(fastifyPostgres, {
 fastify.register(routes);
 
 // Run the server
-const start = () => {
-    fastify.listen(3000, '0.0.0.0', (err, address) => {
+const start = async () => {
+    try {
+        fastify.listen(3000, '0.0.0.0', (_, address) => {
+            console.log(`Listening at port: ${address}`);
+        });
+    } catch (err) {
         if (err) {
             fastify.log.error(err);
             process.exit(1);
         }
-    });
+    }
 };
 
 start();
