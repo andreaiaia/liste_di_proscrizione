@@ -17,10 +17,8 @@ const start = async () => {
         });
     }
     catch (err) {
-        if (err) {
-            fastify.log.error(err);
-            process.exit(1);
-        }
+        fastify.log.error(err);
+        process.exit(1);
     }
 };
 start();
