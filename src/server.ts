@@ -21,10 +21,8 @@ const start = async () => {
             console.log(`Listening at port: ${address}`);
         });
     } catch (err) {
-        if (err) {
-            fastify.log.error(err);
-            process.exit(1);
-        }
+        fastify.log.error(err);
+        process.exit(1);
     }
 };
 

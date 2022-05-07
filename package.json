@@ -23,6 +23,7 @@
   "dependencies": {
     "@types/node": "^17.0.31",
     "db-migrate": "^0.11.13",
+    "db-migrate-pg": "^1.2.2",
     "dotenv": "^16.0.0",
     "fastify": "^3.29.0",
     "fastify-decorators": "^3.11.0",
