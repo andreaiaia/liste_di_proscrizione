@@ -1,13 +1,13 @@
-import { FastifyRequest } from "fastify";
+import { FastifyRequest, RequestGenericInterface } from "fastify";
 
-export type find = FastifyRequest<{
-    Body: {
+export interface find extends RequestGenericInterface {
+    Querystring: {
         first_name?: string,
         last_name?: string,
         email?: string,
         phone?: string
     };
-}>
+}
 
 export type addElement = FastifyRequest<{
     Body: {

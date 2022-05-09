@@ -1,4 +1,3 @@
-import { addElement } from "./schemas.js";
 export const routes = async (fastify, options) => {
     // Testing route
     fastify.get('/test', async (req, reply) => {
@@ -18,10 +17,21 @@ export const routes = async (fastify, options) => {
             client.release();
         }
     });
-    fastify.get('/id', async (req, reply) => {
-        return { hello: 'friends' };
+    fastify.get('/find', async (req, reply) => {
+        const client = await fastify.pg.connect();
+        const { first_name, last_name, email, phone } = req.query;
+        try {
+            const { rows } = await client.query('SELECT * FROM blacklisted WHERE first_name=$1 OR last_name=$2 OR email=$3 OR phone=$4', [first_name, last_name, email, phone]);
+            return rows;
+        }
+        catch (err) {
+            throw err;
+        }
+        finally {
+            client.release();
+        }
     });
-    fastify.post('/edit', { schema: { body: addElement } }, async (req, reply) => {
+    fastify.post('/edit', async (req, reply) => {
         return { hello: 'friends' };
         // const { first_name, last_name, email, phone, blacklisted, last_edit } = req.body;
         // const query = {

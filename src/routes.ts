@@ -21,18 +21,16 @@ export const routes: FastifyPluginCallback = async (fastify, options) => {
         }
     });
 
-    fastify.get('/find', async (req: find, reply) => {
+    fastify.get<find>('/find', async (req, reply) => {
         const client = await fastify.pg.connect();
-
-        const { first_name, last_name, email, phone } = req.body;
+        const { first_name, last_name, email, phone } = req.query;
 
         try {
-
-            const result = await client.query(
-                "SELECT * FROM blacklisted"
+            const { rows } = await client.query(
+                'SELECT * FROM blacklisted WHERE first_name=$1 OR last_name=$2 OR email=$3 OR phone=$4',
+                [first_name, last_name, email, phone]
             );
-            reply.status(200).send(result);
-            // return result;
+            return rows;
         } catch (err) {
             throw err;
         } finally {
@@ -40,7 +38,7 @@ export const routes: FastifyPluginCallback = async (fastify, options) => {
         }
     });
 
-    fastify.post('/edit', { schema: { body: addElement } }, async (req, reply) => {
+    fastify.post('/edit', async (req: addElement, reply) => {
         return { hello: 'friends' };
         // const { first_name, last_name, email, phone, blacklisted, last_edit } = req.body;
 
