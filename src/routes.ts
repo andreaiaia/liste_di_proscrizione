@@ -1,5 +1,5 @@
 import { FastifyPluginCallback } from "fastify";
-import { addElement } from "./schemas.js";
+import { addElement, find } from "./schemas.js";
 
 
 export const routes: FastifyPluginCallback = async (fastify, options) => {
@@ -10,6 +10,7 @@ export const routes: FastifyPluginCallback = async (fastify, options) => {
 
     fastify.get('/blacklist', async (req, reply) => {
         const client = await fastify.pg.connect();
+
         try {
             const result = await client.query("SELECT * FROM blacklisted");
             reply.status(200).send(result);
@@ -21,8 +22,23 @@ export const routes: FastifyPluginCallback = async (fastify, options) => {
         }
     });
 
-    fastify.get('/id', async (req, reply) => {
-        return { hello: 'friends' };
+    fastify.get('/find', { schema: { body: find } }, async (req, reply) => {
+        const client = await fastify.pg.connect();
+
+        const { first_name, last_name, email, phone } = req.body;
+
+        try {
+
+            const result = await client.query(
+                "SELECT * FROM blacklisted"
+            );
+            reply.status(200).send(result);
+            // return result;
+        } catch (err) {
+            throw err;
+        } finally {
+            client.release();
+        }
     });
 
     fastify.post('/edit', { schema: { body: addElement } }, async (req, reply) => {
