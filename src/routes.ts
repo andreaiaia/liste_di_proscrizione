@@ -1,17 +1,6 @@
 import { FastifyPluginCallback } from "fastify";
 import { addElement } from "./schemas.js";
-import pkg from "pg";
 
-const { Client } = pkg;
-
-const client = new Client({
-    user: `${process.env.POSTGRES_USER}`,
-    database: `${process.env.POSTGRES_DB}`,
-    password: `${process.env.POSTGRES_PASSWORD}`,
-    port: parseInt(process.env.POSTGRES_PORT || '5432')
-});
-
-client.connect();
 
 export const routes: FastifyPluginCallback = async (fastify, options) => {
     // Testing route
@@ -20,11 +9,15 @@ export const routes: FastifyPluginCallback = async (fastify, options) => {
     });
 
     fastify.get('/blacklist', async (req, reply) => {
+        const client = await fastify.pg.connect();
         try {
-            const result = client.query("SELECT * FROM blacklisted");
+            const result = await client.query("SELECT * FROM blacklisted");
             reply.status(200).send(result);
+            // return result;
         } catch (err) {
             throw err;
+        } finally {
+            client.release();
         }
     });
 
