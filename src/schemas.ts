@@ -1,13 +1,22 @@
-export const addElement = {
-    type: 'object',
-    required: ['first_name', 'last_name', 'email', 'phone', 'blacklisted', 'last_edit'],
-    properties: {
-        first_name: { type: 'string' },
-        last_name: { type: 'string' },
-        email: { type: 'string', format: 'email' },
-        phone: { type: 'string', pattern: '[0-9]{15}' },
-        blacklisted: { type: 'boolean' },
-        last_edit: { type: 'string' },
+import { FastifyRequest } from "fastify";
+
+export type find = FastifyRequest<{
+    Body: {
+        first_name?: string,
+        last_name?: string,
+        email?: string,
+        phone?: string
+    };
+}>
+
+export type addElement = FastifyRequest<{
+    Body: {
+        first_name: string,
+        last_name: string,
+        email: string,
+        phone: string,
+        blacklisted: boolean,
+        last_edit: string,
     }
-}
+}>
 

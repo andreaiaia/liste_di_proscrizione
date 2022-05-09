@@ -1,14 +1,5 @@
-import { FastifyPluginCallback, FastifyRequest } from "fastify";
-import { addElement } from "./schemas.js";
-
-type find = FastifyRequest<{
-    Body: {
-        first_name: { type: 'string' },
-        last_name: { type: 'string' },
-        email: { type: 'string', format: 'email' },
-        phone: { type: 'string', pattern: '[0-9]{15}' }
-    };
-}>
+import { FastifyPluginCallback } from "fastify";
+import { addElement, find } from "./schemas.js";
 
 export const routes: FastifyPluginCallback = async (fastify, options) => {
     // Testing route
