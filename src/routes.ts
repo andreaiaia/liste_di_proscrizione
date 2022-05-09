@@ -1,6 +1,14 @@
-import { FastifyPluginCallback } from "fastify";
-import { addElement, find } from "./schemas.js";
+import { FastifyPluginCallback, FastifyRequest } from "fastify";
+import { addElement } from "./schemas.js";
 
+type find = FastifyRequest<{
+    Body: {
+        first_name: { type: 'string' },
+        last_name: { type: 'string' },
+        email: { type: 'string', format: 'email' },
+        phone: { type: 'string', pattern: '[0-9]{15}' }
+    };
+}>
 
 export const routes: FastifyPluginCallback = async (fastify, options) => {
     // Testing route
@@ -22,7 +30,7 @@ export const routes: FastifyPluginCallback = async (fastify, options) => {
         }
     });
 
-    fastify.get('/find', { schema: { body: find } }, async (req, reply) => {
+    fastify.get('/find', async (req: find, reply) => {
         const client = await fastify.pg.connect();
 
         const { first_name, last_name, email, phone } = req.body;
