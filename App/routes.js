@@ -34,11 +34,11 @@ export const routes = async (fastify, options) => {
         }
     });
     fastify.post('/add', async (req, reply) => {
-        const client = await fastify.pg.connect();
+        // const client = await fastify.pg.connect();
         const { first_name, last_name, email, phone, is_blocked, last_editor } = req.body;
         try {
             return fastify.pg.transact(async (client) => {
-                const id = await client.query(`INSERT INTO blacklisted (
+                const { rows } = await client.query(`INSERT INTO blacklisted (
                                 first_name, 
                                 last_name, 
                                 email, 
@@ -46,21 +46,38 @@ export const routes = async (fastify, options) => {
                                 is_blocked, 
                                 last_editor
                             )
-                    VALUES($1, $2, $3, $4, $5, $6 ) RETURNING id`, [first_name, last_name, email, phone, is_blocked, last_editor]);
-                return id;
+                    VALUES($1, $2, $3, $4, $5, $6 ) RETURNING *`, [first_name, last_name, email, phone, is_blocked, last_editor]);
+                return rows;
             });
         }
         catch (err) {
             throw err;
         }
-        finally {
-            client.release();
+        // } finally {
+        //     client.release();
+        // }
+    });
+    fastify.patch('/edit', async (req, reply) => {
+        const { first_name, last_name, email, phone, is_blocked, last_editor } = req.body;
+        try {
+            return fastify.pg.transact(async (client) => {
+                const { rows } = await client.query(`INSERT INTO blacklisted (
+                                first_name, 
+                                last_name, 
+                                email, 
+                                phone, 
+                                is_blocked, 
+                                last_editor
+                            )
+                    VALUES($1, $2, $3, $4, $5, $6 ) RETURNING *`, [first_name, last_name, email, phone, is_blocked, last_editor]);
+                return rows;
+            });
+        }
+        catch (err) {
+            throw err;
         }
     });
-    fastify.post('/edit', async (req, reply) => {
-        return { hello: 'friends' };
-    });
-    fastify.post('/del', async (req, reply) => {
+    fastify.delete('/del', async (req, reply) => {
         return { hello: 'friends' };
     });
 };

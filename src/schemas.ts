@@ -20,3 +20,19 @@ export type addElement = FastifyRequest<{
     }
 }>
 
+export interface patchElement extends RequestGenericInterface {
+    Querystring: {
+        id: string;
+    }
+    Body: {
+        first_name?: string,
+        last_name?: string,
+        email?: string,
+        phone?: string,
+        is_blocked?: boolean,
+        last_editor?: string,
+    }
+}
+
+// export type patchElement = FastifyRequest<{
+// }>

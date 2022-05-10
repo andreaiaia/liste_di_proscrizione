@@ -1,5 +1,5 @@
 import { FastifyPluginCallback } from "fastify";
-import { addElement, find } from "./schemas.js";
+import { addElement, find, patchElement } from "./schemas.js";
 
 export const routes: FastifyPluginCallback = async (fastify, options) => {
     // Testing route
@@ -40,7 +40,7 @@ export const routes: FastifyPluginCallback = async (fastify, options) => {
     });
 
     fastify.post('/add', async (req: addElement, reply) => {
-        const client = await fastify.pg.connect();
+        // const client = await fastify.pg.connect();
 
         const { first_name,
             last_name,
@@ -69,16 +69,44 @@ export const routes: FastifyPluginCallback = async (fastify, options) => {
             );
         } catch (err) {
             throw err;
-        } finally {
-            client.release();
+        }
+        // } finally {
+        //     client.release();
+        // }
+    });
+
+    fastify.patch<patchElement>('/edit', async (req, reply) => {
+        const { first_name,
+            last_name,
+            email,
+            phone,
+            is_blocked,
+            last_editor } = req.body;
+
+        try {
+            return fastify.pg.transact(async client => {
+                const { rows } = await client.query(
+                    `INSERT INTO blacklisted (
+                                first_name, 
+                                last_name, 
+                                email, 
+                                phone, 
+                                is_blocked, 
+                                last_editor
+                            )
+                    VALUES($1, $2, $3, $4, $5, $6 ) RETURNING *`,
+                    [first_name, last_name, email, phone, is_blocked, last_editor],
+                );
+
+                return rows;
+            }
+            );
+        } catch (err) {
+            throw err;
         }
     });
 
-    fastify.post('/edit', async (req, reply) => {
-        return { hello: 'friends' };
-    });
-
-    fastify.post('/del', async (req, reply) => {
+    fastify.delete('/del', async (req, reply) => {
         return { hello: 'friends' };
     });
 }
