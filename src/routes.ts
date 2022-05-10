@@ -23,13 +23,14 @@ export const routes: FastifyPluginCallback = async (fastify, options) => {
 
     fastify.get<find>('/find', async (req, reply) => {
         const client = await fastify.pg.connect();
-        const { first_name, last_name, email, phone } = req.query;
+
+        const { first_name } = req.query;
 
         try {
             const { rows } = await client.query(
-                'SELECT * FROM blacklisted WHERE first_name=$1 OR last_name=$2 OR email=$3 OR phone=$4',
-                [first_name, last_name, email, phone]
+                'SELECT * FROM blacklisted WHERE first_name=$1', [first_name]
             );
+            if (rows === []) return "No match found";
             return rows;
         } catch (err) {
             throw err;
@@ -38,32 +39,42 @@ export const routes: FastifyPluginCallback = async (fastify, options) => {
         }
     });
 
-    fastify.post('/edit', async (req: addElement, reply) => {
-        return { hello: 'friends' };
-        // const { first_name, last_name, email, phone, blacklisted, last_edit } = req.body;
+    fastify.post('/add', async (req: addElement, reply) => {
+        const client = await fastify.pg.connect();
 
-        // const query = {
-        //     text: `INSERT INTO blacklisted (
-        //                 first_name, 
-        //                 last_name, 
-        //                 email, 
-        //                 phone, 
-        //                 blacklisted, 
-        //                 last_edit
-        //             )
-        //             VALUES($1, $2, $3, $4, $5, $6 ) RETURNING *`,
-        //     values: [first_name, last_name, email, phone, blacklisted, last_edit],
-        // };
+        const { first_name,
+            last_name,
+            email,
+            phone,
+            is_blocked,
+            last_editor } = req.body;
 
-        // try {
-        //     reply.code(201);
-        //     return { created: true };
-        // } catch (err) {
-        //     throw new Error(err);
-        // }
+        try {
+            return fastify.pg.transact(async client => {
+                const { rows } = await client.query(
+                    `INSERT INTO blacklisted (
+                                first_name, 
+                                last_name, 
+                                email, 
+                                phone, 
+                                is_blocked, 
+                                last_editor
+                            )
+                    VALUES($1, $2, $3, $4, $5, $6 ) RETURNING *`,
+                    [first_name, last_name, email, phone, is_blocked, last_editor],
+                );
+
+                return rows;
+            }
+            );
+        } catch (err) {
+            throw err;
+        } finally {
+            client.release();
+        }
     });
 
-    fastify.post('/add', async (req, reply) => {
+    fastify.post('/edit', async (req, reply) => {
         return { hello: 'friends' };
     });
 

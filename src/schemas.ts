@@ -15,8 +15,8 @@ export type addElement = FastifyRequest<{
         last_name: string,
         email: string,
         phone: string,
-        blacklisted: boolean,
-        last_edit: string,
+        is_blocked: boolean,
+        last_editor: string,
     }
 }>
 
