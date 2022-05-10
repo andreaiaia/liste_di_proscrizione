@@ -7,8 +7,7 @@ export const routes = async (fastify, options) => {
         const client = await fastify.pg.connect();
         try {
             const result = await client.query("SELECT * FROM blacklisted");
-            reply.status(200).send(result);
-            // return result;
+            return result;
         }
         catch (err) {
             throw err;

@@ -6,7 +6,7 @@ const fastify = Fastify({ logger: true });
 //     connectionString: `postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.POSTGRES_SERVICE}:${process.env.POSTGRES_PORT}/${process.env.POSTGRES_DB}`,
 // });
 fastify.register(fastifyPostgres, {
-    connectionString: `${process.env.POSTGRES_URI}`
+    connectionString: `postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.POSTGRES_SERVICE}:${process.env.POSTGRES_PORT}/${process.env.POSTGRES_DB}`
 });
 fastify.register(routes);
 // Run the server

@@ -12,8 +12,8 @@ export const routes: FastifyPluginCallback = async (fastify, options) => {
 
         try {
             const result = await client.query("SELECT * FROM blacklisted");
-            reply.status(200).send(result);
-            // return result;
+
+            return result;
         } catch (err) {
             throw err;
         } finally {
