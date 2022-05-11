@@ -1,5 +1,5 @@
 import { FastifyPluginCallback } from "fastify";
-import { addElement, find, patchElement } from "./schemas.js";
+import { addElement, deleteElement, find, patchElement } from "./schemas.js";
 
 export const routes: FastifyPluginCallback = async (fastify, options) => {
     // Testing route
@@ -52,14 +52,15 @@ export const routes: FastifyPluginCallback = async (fastify, options) => {
         try {
             return fastify.pg.transact(async client => {
                 const { rows } = await client.query(
-                    `INSERT INTO blacklisted (
-                                first_name, 
-                                last_name, 
-                                email, 
-                                phone, 
-                                is_blocked, 
-                                last_editor
-                            )
+                    `INSERT INTO blacklisted 
+                    (
+                        first_name, 
+                        last_name, 
+                        email, 
+                        phone, 
+                        is_blocked, 
+                        last_editor
+                    )
                     VALUES($1, $2, $3, $4, $5, $6 ) RETURNING *`,
                     [first_name, last_name, email, phone, is_blocked, last_editor],
                 );
@@ -81,21 +82,21 @@ export const routes: FastifyPluginCallback = async (fastify, options) => {
             email,
             phone,
             is_blocked,
-            last_editor } = req.body;
+            last_editor,
+            id } = req.body;
 
         try {
             return fastify.pg.transact(async client => {
                 const { rows } = await client.query(
-                    `INSERT INTO blacklisted (
-                                first_name, 
-                                last_name, 
-                                email, 
-                                phone, 
-                                is_blocked, 
-                                last_editor
-                            )
-                    VALUES($1, $2, $3, $4, $5, $6 ) RETURNING *`,
-                    [first_name, last_name, email, phone, is_blocked, last_editor],
+                    `UPDATE blacklisted SET
+                        first_name=$1, 
+                        last_name=$2, 
+                        email$3, 
+                        phone=$4, 
+                        is_blocked=$5, 
+                        last_editor=$6
+                    WHERE id=$7 RETURNING *`,
+                    [first_name, last_name, email, phone, is_blocked, last_editor, id],
                 );
 
                 return rows;
@@ -106,7 +107,22 @@ export const routes: FastifyPluginCallback = async (fastify, options) => {
         }
     });
 
-    fastify.delete('/del', async (req, reply) => {
-        return { hello: 'friends' };
+    fastify.delete<deleteElement>('/del', async (req, reply) => {
+        const { id } = req.body;
+
+        try {
+            return fastify.pg.transact(async client => {
+                const { rows } = await client.query(
+                    `DELETE FROM blacklisted
+                    WHERE id=$1 RETURNING *`,
+                    [id],
+                );
+
+                return rows;
+            }
+            );
+        } catch (err) {
+            throw err;
+        }
     });
 }

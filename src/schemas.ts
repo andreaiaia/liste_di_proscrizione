@@ -31,8 +31,12 @@ export interface patchElement extends RequestGenericInterface {
         phone?: string,
         is_blocked?: boolean,
         last_editor?: string,
+        id: string
     }
 }
 
-// export type patchElement = FastifyRequest<{
-// }>
+export interface deleteElement extends RequestGenericInterface {
+    Body: {
+        id: string
+    }
+}
