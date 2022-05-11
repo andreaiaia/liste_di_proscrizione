@@ -13,4 +13,4 @@ CREATE TABLE blacklist
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     last_edit TIMESTAMP NOT NULL DEFAULT NOW(),
     last_edited_by VARCHAR(100) NOT NULL
-);
+)
