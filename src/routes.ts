@@ -4,7 +4,7 @@ import { addElement, deleteElement, find, patchElement } from "./schemas.js";
 export const routes: FastifyPluginCallback = async (fastify, options) => {
     // Testing route
     fastify.get('/test', async (req, reply) => {
-        reply.send({ hello: 'friends' });
+        reply.code(200).send({ hello: 'friends' });
     });
 
     fastify.get('/blacklist', async (req, reply) => {
@@ -12,7 +12,7 @@ export const routes: FastifyPluginCallback = async (fastify, options) => {
 
         try {
             const { rows } = await client.query("SELECT * FROM blacklisted");
-            reply.send(rows);
+            reply.code(200).send(rows);
         } catch (err) {
             throw err;
         } finally {
@@ -31,7 +31,7 @@ export const routes: FastifyPluginCallback = async (fastify, options) => {
 
             if (rows === []) reply.send("No match found");
 
-            reply.send(rows);
+            reply.code(200).send(rows);
         } catch (err) {
             throw err;
         } finally {
@@ -63,7 +63,7 @@ export const routes: FastifyPluginCallback = async (fastify, options) => {
                     [first_name, last_name, email, phone, is_blocked, last_edited_by],
                 );
 
-                reply.send(rows);
+                reply.code(201).send(rows);
             });
         } catch (err) {
             throw err;
@@ -84,7 +84,7 @@ export const routes: FastifyPluginCallback = async (fastify, options) => {
                     [is_blocked, last_edited_by, id],
                 );
 
-                reply.send(rows);
+                reply.code(200).send(rows);
             }
             );
         } catch (err) {
@@ -103,7 +103,7 @@ export const routes: FastifyPluginCallback = async (fastify, options) => {
                     [id],
                 );
 
-                reply.send(rows);
+                reply.code(200).send(rows);
             }
             );
         } catch (err) {
