@@ -2,7 +2,7 @@
   "name": "liste_di_proscrizione",
   "version": "1.0.0",
   "description": "A service to blacklist Users",
-  "main": "App/server.js",
+  "main": "./App/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./App/server.js",
