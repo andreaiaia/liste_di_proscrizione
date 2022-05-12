@@ -4,16 +4,15 @@ import { addElement, deleteElement, find, patchElement } from "./schemas.js";
 export const routes: FastifyPluginCallback = async (fastify, options) => {
     // Testing route
     fastify.get('/test', async (req, reply) => {
-        return { hello: 'friends' };
+        reply.send({ hello: 'friends' });
     });
 
     fastify.get('/blacklist', async (req, reply) => {
         const client = await fastify.pg.connect();
 
         try {
-            const result = await client.query("SELECT * FROM blacklisted");
-
-            return result;
+            const { rows } = await client.query("SELECT * FROM blacklisted");
+            reply.send(rows);
         } catch (err) {
             throw err;
         } finally {
@@ -23,15 +22,16 @@ export const routes: FastifyPluginCallback = async (fastify, options) => {
 
     fastify.get<find>('/find', async (req, reply) => {
         const client = await fastify.pg.connect();
-
-        const { first_name } = req.query;
+        const { email } = req.query;
 
         try {
             const { rows } = await client.query(
-                'SELECT * FROM blacklisted WHERE first_name=$1', [first_name]
+                'SELECT * FROM blacklisted WHERE email=$1', [email]
             );
-            if (rows === []) return "No match found";
-            return rows;
+
+            if (rows === []) reply.send("No match found");
+
+            reply.send(rows);
         } catch (err) {
             throw err;
         } finally {
@@ -39,15 +39,13 @@ export const routes: FastifyPluginCallback = async (fastify, options) => {
         }
     });
 
-    fastify.post('/add', async (req: addElement, reply) => {
-        // const client = await fastify.pg.connect();
-
+    fastify.post<addElement>('/blacklist', async (req, reply) => {
         const { first_name,
             last_name,
             email,
             phone,
             is_blocked,
-            last_editor } = req.body;
+            last_edited_by } = req.body;
 
         try {
             return fastify.pg.transact(async client => {
@@ -59,47 +57,34 @@ export const routes: FastifyPluginCallback = async (fastify, options) => {
                         email, 
                         phone, 
                         is_blocked, 
-                        last_editor
+                        last_edited_by
                     )
                     VALUES($1, $2, $3, $4, $5, $6 ) RETURNING *`,
-                    [first_name, last_name, email, phone, is_blocked, last_editor],
+                    [first_name, last_name, email, phone, is_blocked, last_edited_by],
                 );
 
-                return rows;
-            }
-            );
+                reply.send(rows);
+            });
         } catch (err) {
             throw err;
         }
-        // } finally {
-        //     client.release();
-        // }
     });
 
-    fastify.patch<patchElement>('/edit', async (req, reply) => {
-        const { first_name,
-            last_name,
-            email,
-            phone,
-            is_blocked,
-            last_editor,
-            id } = req.body;
+    fastify.patch<patchElement>('/', async (req, reply) => {
+        const { is_blocked, last_edited_by } = req.body;
+        const { id } = req.query;
 
         try {
             return fastify.pg.transact(async client => {
                 const { rows } = await client.query(
                     `UPDATE blacklisted SET
-                        first_name=$1, 
-                        last_name=$2, 
-                        email$3, 
-                        phone=$4, 
                         is_blocked=$5, 
-                        last_editor=$6
+                        last_edited_by=$6
                     WHERE id=$7 RETURNING *`,
-                    [first_name, last_name, email, phone, is_blocked, last_editor, id],
+                    [is_blocked, last_edited_by, id],
                 );
 
-                return rows;
+                reply.send(rows);
             }
             );
         } catch (err) {
@@ -107,8 +92,8 @@ export const routes: FastifyPluginCallback = async (fastify, options) => {
         }
     });
 
-    fastify.delete<deleteElement>('/del', async (req, reply) => {
-        const { id } = req.body;
+    fastify.delete<deleteElement>('/', async (req, reply) => {
+        const { id } = req.query;
 
         try {
             return fastify.pg.transact(async client => {
@@ -118,7 +103,7 @@ export const routes: FastifyPluginCallback = async (fastify, options) => {
                     [id],
                 );
 
-                return rows;
+                reply.send(rows);
             }
             );
         } catch (err) {

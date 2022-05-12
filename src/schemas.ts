@@ -9,34 +9,30 @@ export interface find extends RequestGenericInterface {
     };
 }
 
-export type addElement = FastifyRequest<{
+export interface addElement extends RequestGenericInterface {
     Body: {
         first_name: string,
         last_name: string,
         email: string,
         phone: string,
         is_blocked: boolean,
-        last_editor: string,
+        last_edited_by: string,
     }
-}>
+}
 
 export interface patchElement extends RequestGenericInterface {
     Querystring: {
         id: string;
     }
     Body: {
-        first_name?: string,
-        last_name?: string,
-        email?: string,
-        phone?: string,
         is_blocked?: boolean,
-        last_editor?: string,
+        last_edited_by?: string,
         id: string
     }
 }
 
 export interface deleteElement extends RequestGenericInterface {
-    Body: {
+    Querystring: {
         id: string
     }
 }

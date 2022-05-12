@@ -1,7 +1,6 @@
 import Fastify from 'fastify';
 import fastifyPostgres from '@fastify/postgres';
 import { routes } from './routes.js';
-import { applyMigration } from './migrations.js';
 
 const fastify = Fastify({ logger: true });
 
