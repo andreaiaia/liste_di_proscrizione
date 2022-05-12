@@ -35,12 +35,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var fastify_1 = __importDefault(require("fastify"));
-var postgres_1 = __importDefault(require("@fastify/postgres"));
+var fastify_1 = require("fastify");
+var postgres_1 = require("@fastify/postgres");
 var routes_js_1 = require("./routes.js");
 var fastify = (0, fastify_1.default)({ logger: true });
 fastify.register(postgres_1.default, {

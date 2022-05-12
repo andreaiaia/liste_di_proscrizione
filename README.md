@@ -95,10 +95,6 @@ To connect to the postgres db in order to make the queries I used the pg package
 Here is the [official repo](https://github.com/brianc/node-postgres).
 Here is the [documentation I used](https://node-postgres.com/features/connecting).
 
-## Nodemon
+## Known problems
 
-Since the project is written in typescript, we miss the ability to hot-refresh the docker build at every save to instantly see the changes we made; we need instead to stop the container, build the typescript and then start the container again.
-Boooooooring.
-With nodemon we can write code and immediatly see the changes applied. Thanks nodemon.
-
-### Usage
+I don't understand why nodemon doesn't work (the command `npm run dev` crashes). I'll investigate further because live-refresh during development is too useful to ignore.
